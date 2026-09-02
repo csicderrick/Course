@@ -1,76 +1,76 @@
-
-
-<h1>【練習題目 : 七段顯示器】</h1>
+<h1>【練習題目 : LED 控制】</h1>
 
 ## 準備材料 : 
->1. Arduino Nano 板(CH340驅動程式.USB:MiniUSB)
+>1. Arduino Nano 板(CH340驅動程式.USB:MicroUSB)
 >2. MicroUSB 連接線 X 1
->3. 七段顯示器(共陰極) X 1
+>3. LED 一顆
 >4. 杜邦線數條
 >5. 麵包板 X 1
 ===
  
->![](https://github.com/derricktsai0904/Arduino/blob/master/02%20Arduino%20%E5%9F%BA%E6%9C%AC%E6%84%9F%E6%B8%AC%E5%99%A8%E5%AF%A6%E4%BD%9C%E7%AF%84%E4%BE%8B/%E4%B8%83%E6%AE%B5%E9%A1%AF%E7%A4%BA%E5%99%A8/Arduino_Seven_M.JPG?raw=true)
+>![](https://github.com/derricktsai0904/Arduino/blob/master/02%20Arduino%20%E5%9F%BA%E6%9C%AC%E6%84%9F%E6%B8%AC%E5%99%A8%E5%AF%A6%E4%BD%9C%E7%AF%84%E4%BE%8B/A.LED%E6%8E%A7%E5%88%B6/Arduino_LED.PNG?raw=true)
 
-## 七段顯示器電路圖
+## LED控制電路圖
 
->![](https://github.com/derricktsai0904/Arduino/blob/master/02%20Arduino%20%E5%9F%BA%E6%9C%AC%E6%84%9F%E6%B8%AC%E5%99%A8%E5%AF%A6%E4%BD%9C%E7%AF%84%E4%BE%8B/%E4%B8%83%E6%AE%B5%E9%A1%AF%E7%A4%BA%E5%99%A8/Arduino_Seven.JPG?raw=true)
-
-### 七段顯示器分成共陽極和共陰極兩種，不管是哪一種，內部構造都是由 8 個 LED 發光二極體所組成，其中七個是筆劃，另外一個是小數點，如下圖所示，依順時針方向分別為 a, b, c, d, e, f, g 以及小數點 dp (decimal point):
->![](https://github.com/derricktsai0904/Course/blob/main/2024.09%E6%84%9F%E6%B8%AC%E5%85%83%E4%BB%B6/%E4%B8%83%E6%AE%B5%E9%A1%AF%E7%A4%BA%E5%99%A8/seven.jpg?raw=true)
-
-### 要產生數字，方法是點亮指定的 LED。例如要產生數字 0，便點亮 a, b, c, d, e, f 等節段；要產生數字 1，便點亮 b, c 等節段；要產生數字 2，便點亮 a, b, d, e, g 等節段，依此類推。以共陰極而言，0 到 9 這十個阿拉伯數字與各節段的對應表如下：
->![](https://github.com/derricktsai0904/Course/blob/main/2024.09%E6%84%9F%E6%B8%AC%E5%85%83%E4%BB%B6/%E4%B8%83%E6%AE%B5%E9%A1%AF%E7%A4%BA%E5%99%A8/seven_tb.jpg?raw=true)
+>![](https://github.com/derricktsai0904/Arduino/blob/master/02%20Arduino%20%E5%9F%BA%E6%9C%AC%E6%84%9F%E6%B8%AC%E5%99%A8%E5%AF%A6%E4%BD%9C%E7%AF%84%E4%BE%8B/A.LED%E6%8E%A7%E5%88%B6/Arduino_LED_Circuit.PNG?raw=true)
 
 ## 相關函式 : 無
 
 ## 程式說明
 
-[以下程式來源 Seven.ino ]:https://github.com/derricktsai0904/Arduino/blob/master/02%20Arduino%20%E5%9F%BA%E6%9C%AC%E6%84%9F%E6%B8%AC%E5%99%A8%E5%AF%A6%E4%BD%9C%E7%AF%84%E4%BE%8B/%E4%B8%83%E6%AE%B5%E9%A1%AF%E7%A4%BA%E5%99%A8/Seven.ino "Seven.ino"
-[以下程式來源 Seven.ino ]
+[以下程式來源 Blink.ino ]:https://github.com/derricktsai0904/Arduino/blob/master/02%20Arduino%20%E5%9F%BA%E6%9C%AC%E6%84%9F%E6%B8%AC%E5%99%A8%E5%AF%A6%E4%BD%9C%E7%AF%84%E4%BE%8B/A.LED%E6%8E%A7%E5%88%B6/Blink.ino "Blink.ino"
+[以下程式來源 Blink.ino ]
 ``` arduino
+int LED = 13; // 宣告 Arduino 連結 LED 腳位
+void setup() {  // Arduino 啟始函式，只會執行一次
+ pinMode(LED, OUTPUT); //設定腳位為輸出訊號
+}  
 
-int i;
-int j;
+void loop() { //Arduino 主要迴圈，執行無窮多次，直到關機為主
+ digitalWrite(LED, HIGH);   // 設定 LED 亮
+ delay(1000);               // 延遲一秒  
+ digitalWrite(LED, LOW);    // 設定 LED 關
+ delay(1000);               // 延遲一秒
+}  
 
-// 設定一個 matrix，B0111111 最前面的 B 代表資料型態為 byte
-// 後面跟的 0111111 則是上面對照表的 gfedcba 
-const byte num[10]={
-    B0111111,  //0
-    B0000110,  //1
-    B1011011,  //2
-    B1001111,  //3
-    B1100110,  //4
-    B1101101,  //5
-    B1111101,  //6
-    B0000111,  //7    
-    B1111111,  //8
-    B1101111   //9    
-};
-
-// 設定顯示器各段對應的 pin
-const int seg[]={2,3,4,5,6,7,8};  //ABCDEFG
-
-// 設定各段 pin 為 output
-void setup() 
-{ 
-  for(i=0;i<7;i++)
-    pinMode(seg[i],OUTPUT);
-}
-void loop() 
-{
-  for(i=0;i<10;i++)
-  {
-    for(j=0;j<7;j++)
-    {
-  // 讀取 0~9 matrix 裡的數字，ex: B0111111 的第0~6個位元
-  // 並由對應的 pin 腳輸出高電壓，使 7 段 LED 發出對應的明亮
-      if(bitRead(num[i],j))
-        digitalWrite(seg[j],HIGH);
-      else
-        digitalWrite(seg[j],LOW);        
-    }
-  delay(1000);    
-  } 
-}
 ```
+
+<h1>【練習題目 : 霹靂燈 控制】</h1><br>
+
+## 電路圖說明 <br>
+<img src="LED5.jpg" width=600 height=400 />
+
+## 程式說明
+
+[以下程式來源 LED_Control.ino ]:[https://github.com/derricktsai0904/Arduino/blob/master/04%20NodeMCU/LEDControl/LED_Control.ino](https://github.com/derricktsai0904/Course/blob/main/2024.09%E6%84%9F%E6%B8%AC%E5%85%83%E4%BB%B6/Arduino%20LED%E9%9C%B9%E9%9D%82%E7%87%88/LED_Control.ino) "LED_Control.ino"
+[以下程式來源 LED_Control.ino ]
+``` arduino
+int speed = 20;
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize digital pin LED_BUILTIN as an output.
+  for(int i=8;i<=12;i++){ 
+    pinMode(i,OUTPUT); 
+  }
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  for(int i=8;i<=12;i++){ 
+      digitalWrite(i, HIGH);   // turn the LED on (HIGH is the voltage level)
+      delay(speed);                       // wait for a second
+      digitalWrite(i, LOW);    // turn the LED off by making the voltage LOW
+      delay(speed);   
+  }
+
+  for(int i=12;i>=8;i--){ 
+      digitalWrite(i, HIGH);   // turn the LED on (HIGH is the voltage level)
+      delay(speed);                       // wait for a second
+      digitalWrite(i, LOW);    // turn the LED off by making the voltage LOW
+      delay(speed);   
+  }
+}
+
+```
+
+
